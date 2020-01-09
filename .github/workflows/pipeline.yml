@@ -32,11 +32,11 @@ jobs:
     - run: |
         gcloud config set project ${{ secrets.GCP_PROJECT_ID }}
         gcloud config set run/region ${{ secrets.GCP_REGION }}
+        gcloud auth configure-docker
         gcloud info
-
+    
     - name: Build and tag image
       run: docker build -t "gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ env.APPLICATION_NAME }}:latest" .
-    - name: Docker login
-      run: docker login -u oauth2accesstoken -p "$(gcloud auth print-access-token)" https://gcr.io
-    - name: Publish to GitHub Package Registry
+      
+    - name: Push image to GitHub Package Registry
       run: docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ env.APPLICATION_NAME }}:latest
