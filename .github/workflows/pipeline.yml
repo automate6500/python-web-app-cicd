@@ -24,7 +24,8 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
     - uses: actions/checkout@v1
-    - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+    - name: Set up GCloud
+      uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
       with:
         version: '274.0.1'
         service_account_email: ${{ secrets.GCP_SERVICE_ACCT_EMAIL }}
@@ -38,5 +39,5 @@ jobs:
     - name: Build and tag image
       run: docker build -t "gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ env.APPLICATION_NAME }}:latest" .
       
-    - name: Push image to GitHub Package Registry
+    - name: Push to GCP image registry
       run: docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ env.APPLICATION_NAME }}:latest
