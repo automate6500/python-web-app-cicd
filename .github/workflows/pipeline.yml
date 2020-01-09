@@ -21,8 +21,8 @@ jobs:
         python -m unittest --verbose --failfast        
 
   build_image:
-    runs-on: ubuntu-18.04
     needs: [lint]
+    runs-on: ubuntu-18.04
     steps:
     - uses: actions/checkout@v1
     - name: Set up GCloud
