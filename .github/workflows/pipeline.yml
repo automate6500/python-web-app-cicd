@@ -5,11 +5,11 @@ env:
   APPLICATION_NAME: app2
 jobs:
   lint:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - name: Setup Python environment
-      uses: actions/setup-python@v1.1.1
+      uses: actions/setup-python@v3
     - name: Install requirements
       run: pip install --quiet --requirement requirements.txt
     - name: Lint code
@@ -22,11 +22,11 @@ jobs:
 
   build_image:
     needs: [lint]
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - name: Set up GCloud
-      uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      uses: google-github-actions/deploy-cloudrun@v0
       with:
         version: '274.0.1'
         service_account_email: ${{ secrets.GCP_SERVICE_ACCT_EMAIL }}
@@ -45,10 +45,10 @@ jobs:
 
   test_image:
     needs: [build_image]
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
     - name: Set up GCloud
-      uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      uses: google-github-actions/deploy-cloudrun@v0
       with:
         version: '274.0.1'
         service_account_email: ${{ secrets.GCP_SERVICE_ACCT_EMAIL }}
@@ -64,10 +64,10 @@ jobs:
 
   deploy:
     needs: [test_image]
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
     - name: Set up GCloud
-      uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      uses: google-github-actions/deploy-cloudrun@v0
       with:
         version: '274.0.1'
         service_account_email: ${{ secrets.GCP_SERVICE_ACCT_EMAIL }}
